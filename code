@@ -1,0 +1,185 @@
+/***
+-----------------------------------------------------------------
+
+This circuit description is ON & OFF STATE of LED using SWITCH is interfacing with LCD display and GSM module.
+
+In this circuit it contains single LED.
+
+LCD(16*2) is an electronic display module that uses liquid crystal to produce a visible text.
+
+16*2 translates a display 16 characters per line in 2 such lines.
+
+GSM module is a hardware device that uses GSM mobile telephone technology to provide a data link to a remote network. 
+
+Postive terminal of LED is a Anode , Negative terminal of LED is a cathode.
+
+For LED there are two pins which are anode and cathode.
+
+Anode is connected to power , in between one resister is used to avoid the LED breaks ,it also control current flow.
+
+Resistor formule is R = V/I,for LED min 220 ohms is used.
+
+Cathode is connected to ground.
+
+Pins can be connected to either analog nor digital pins.
+
+-----------------------------------------------------------------
+***/
+
+// Header file for LCD display.
+#include<LiquidCrystal.h>
+
+// rs , en , d4 , d5 , d6 , d7 are the pins.
+LiquidCrystal lcd(2 , 3 , 4 , 5 , 6 , 7);
+
+// Here we are initializing the pins numbers to the variable.
+int led = 12;
+int sw = 13;
+
+void setup()
+{
+  // starting LCD display.
+  lcd.begin(16,2);
+  
+  // starting serial monitor.
+  Serial.begin(9600);
+  
+  // Assigning the variable to the pinMode.
+  pinMode(led, OUTPUT);
+  pinMode(sw, INPUT);
+  // Initializing the pins LOW STATE.
+  digitalWrite(led, LOW);
+  digitalWrite(sw, HIGH);
+
+  // Initially clearing the display & print.
+  lcd.clear();
+  lcd.print(" WELCOME ");
+  delay(1000);
+  // Move to next line in LCD display.
+  lcd.setCursor(0,1);
+  lcd.print(" LED USING GSM ");
+  delay(1000);
+  
+  Serial.println(" WELCOME........... ");
+  delay(100);
+  Serial.println(" LED IS INTERFACTING WITH GSM ");
+  delay(100);
+
+  lcd.clear();
+  lcd.print(" AT ");
+  lcd.setCursor(0,1);
+  lcd.print(" ATE0 ");
+  delay(100);
+  
+  Serial.println(" AT ");            // At command.
+  delay(100);
+  Serial.println(" ATE0 ");         // Echo command OFF.
+  delay(100);
+
+  lcd.clear();
+  lcd.print(" AT+CMGF=1 "); 
+  lcd.setCursor(0,1);
+  lcd.print(" AT+CNMI=1,2,0,0 ");   
+  delay(100);
+  
+  Serial.println(" AT+CMGF=1 ");      // command name in text.
+  delay(100);
+  Serial.println(" AT+CNMI=1,2,0,0 ");  // conformation of bits.
+  delay(100);
+
+  lcd.clear();
+  lcd.print("SENDING MESSAGE ");        // sending message to mobile number.
+  delay(1000);
+
+  Serial.print(" AT+CMGS= ");           // send sms command in text mode.
+  delay(100);
+  Serial.print('"');           
+  delay(100);
+  Serial.print(" 9xxxxxxxxx ");           // Mobile number which we want to get message.
+  delay(100);
+  Serial.println('"');
+  delay(100);
+  Serial.println(" LED IS INTERFACTING WITH GSM ");
+  delay(100);
+  Serial.println("\r\n");
+  Serial.write(0x1A);
+  delay(100);
+}
+
+void loop()
+{
+  /***
+  -------------------------------------------------------------
+  Pre Condition: The LED is in the LOW state before starting.
+  Post Condition: The LED will ON when switch is LOW.
+  ---------------------------------------------------------------
+  ***/
+  // Assigning the variable to the read.
+  int switch1 = digitalRead(sw);
+  // LED is ON when switch is LOW.
+  if(switch1 == LOW)
+  {
+    lcd.clear();
+    lcd.print(" AT ");
+    lcd.setCursor(0,1);
+    lcd.print(" ATE0 ");
+    delay(100);
+  
+    Serial.println(" AT ");            // At command.
+    delay(100);
+    Serial.println(" ATE0 ");         // Echo command OFF.
+    delay(100);
+
+    lcd.clear();
+    lcd.print(" AT+CMGF=1 "); 
+    lcd.setCursor(0,1);
+    lcd.print(" AT+CNMI=1,2,0,0 ");   
+    delay(100);
+  
+    Serial.println(" AT+CMGF=1 ");      // command name in text.
+    delay(100);
+    Serial.println(" AT+CNMI=1,2,0,0 ");  // conformation of bits.
+    delay(100);
+
+    lcd.clear();
+    lcd.print("SENDING MESSAGE ");        // sending message to mobile number.
+    delay(1000);
+
+    Serial.print(" AT+CMGS= ");           // send sms command in text mode.
+    delay(100);
+    Serial.print('"');           
+    delay(100);
+    Serial.print(" 9xxxxxxxxx ");           // Mobile number which we want to get message.
+    delay(100);
+    Serial.println('"');
+    delay(100);
+
+  // LED ON display on LCD display.
+    lcd.clear();
+    lcd.print(" LED ON ");
+    delay(1000);
+    
+    Serial.println(" LED ON ");
+    delay(100);
+    Serial.println("\r\n");
+    delay(100);
+    Serial.write(0x1A);
+    delay(100);
+  
+  // LED is ON when it is HIGH
+    digitalWrite(led, HIGH);
+    delay(100);
+  }
+  // LED is OFF in else state.
+  else
+  {
+    // LED OFF display on LCD display.
+    lcd.clear();
+    lcd.print(" LED OFF ");
+    delay(1000);
+    
+  // LED is OFF when it is LOW
+    digitalWrite(led, LOW);
+    delay(100);
+  }
+}
